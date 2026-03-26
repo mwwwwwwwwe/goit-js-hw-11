@@ -1,10 +1,9 @@
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+import SimpleLightbox from 'simple-lightbox';
+import 'simple-lightbox/dist/simple-lightbox.min.css';
 
 const gallery = document.querySelector('.gallery');
 const loader = document.querySelector('.loader');
-
-const lightbox = new SimpleLightbox('.gallery a', {});
+let lightbox = null; // Инициализируем позже
 
 function itemTemplate(image) {
   return `<li class="gallery-item">
@@ -21,10 +20,17 @@ function itemTemplate(image) {
 }
 
 export function createGallery(images) {
-  console.log('createGallery started');
-  const result = images.map(itemTemplate).join('');
-  gallery.insertAdjacentHTML('beforeend', result);
-  lightbox.refresh();
+  const markup = images.map(itemTemplate).join('');
+  gallery.insertAdjacentHTML('beforeend', markup);
+
+  // Создаем лайтбокс ТОЛЬКО после добавления картинок
+  if (lightbox) {
+    lightbox.destroy();
+  }
+  lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
 }
 
 export function clearGallery() {
@@ -32,9 +38,9 @@ export function clearGallery() {
 }
 
 export function showLoader() {
-  loader.style.display = 'block';
+  if (loader) loader.style.display = 'block';
 }
 
 export function hideLoader() {
-  loader.style.display = 'none';
+  if (loader) loader.style.display = 'none';
 }
