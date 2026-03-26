@@ -20,7 +20,6 @@ function itemTemplate(image) {
     </li>`;
 }
 
-
 export function createGallery(images) {
   console.log('createGallery started');
   const result = images.map(itemTemplate).join('');
